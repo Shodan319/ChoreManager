@@ -27,9 +27,9 @@ public class ChoreController
     }
 
     @GetMapping("/chore/{id}")
-    Chore getChore(@PathVariable Long id)
+    Chore getChore(@PathVariable Long id) throws ChoreNotFoundException
     {
-        return this.repository.findById(id).orElseThrow();
+        return this.repository.findById(id).orElseThrow(() -> new ChoreNotFoundException(id.toString()));
     }
 
     @PutMapping("/chore/{id}")

@@ -7,9 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -28,8 +27,15 @@ public class ChoreApplicationTest
     @Test
     public void choresShouldBeEmptyAtStart() throws Exception
     {
-        this.mockMvc.perform(get("/chores")).andDo(print()).
-                andExpect(status().isOk())
-        .andExpect(content().string(IsEqual.equalTo("[]")));
+        this.mockMvc.perform(get("/chores")).
+                andExpect(status().isOk()).
+                andExpect(content().string(IsEqual.equalTo("[]")));
+    }
+
+    @Test
+    public void showErrorRequestingNotFoundChore() throws Exception
+    {
+        this.mockMvc.perform(get("/chore/5")).
+            andExpect(content().string(containsString("5")));
     }
 }
