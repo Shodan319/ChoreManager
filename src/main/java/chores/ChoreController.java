@@ -41,14 +41,8 @@ public class ChoreController
 
     private Chore updateDueDate(Chore chore)
     {
-        if (chore.isDue())
-        {
-            var updatedChore = new Chore(chore.getName(),
-                    chore.getDaysBetween(),
-                    chore.getDurationMinutes(),
-                    chore.getDue().plusDays(chore.getDaysBetween()));
-            return repository.save(updatedChore);
-        }
-        return chore;
+        Chore updatedChore = new ChoreDomain().updateDueDate(chore);
+        return repository.save(updatedChore);
+
     }
 }

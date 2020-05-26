@@ -34,9 +34,4 @@ public class Chore
         this.durationMinutes = durationMinutes;
         this.due = due;
     }
-
-    public boolean isDue()
-    {
-        return !due.isAfter(LocalDate.now());
-    }
 }
