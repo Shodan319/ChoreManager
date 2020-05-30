@@ -17,6 +17,10 @@ public class Chore
     private Integer durationMinutes;
     private LocalDate due;
 
+    public Chore()
+    {
+    }
+
     public Chore(String name, Integer daysBetween)
     {
         this(name, daysBetween, 0);
