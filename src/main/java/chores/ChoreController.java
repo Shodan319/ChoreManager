@@ -20,7 +20,7 @@ public class ChoreController
         return this.repository.findAll();
     }
 
-    @PostMapping("/chores")
+    @PostMapping("/chore")
     Chore newChore(@RequestBody Chore newChore)
     {
         return repository.save(newChore);
