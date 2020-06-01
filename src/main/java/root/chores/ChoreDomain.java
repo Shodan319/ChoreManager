@@ -1,4 +1,4 @@
-package chores;
+package root.chores;
 
 import java.time.LocalDate;
 

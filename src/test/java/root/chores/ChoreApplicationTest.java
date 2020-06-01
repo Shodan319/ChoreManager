@@ -1,6 +1,5 @@
-package chores;
+package root.chores;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,11 +22,6 @@ public class ChoreApplicationTest
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Test
-    public void contextLoads()
-    {
-    }
 
     @Test
     public void choresShouldBeEmptyAtStart() throws Exception

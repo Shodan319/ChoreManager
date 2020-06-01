@@ -1,4 +1,4 @@
-package chores;
+package root.chores;
 
 public class ChoreNotFoundException extends Exception
 {

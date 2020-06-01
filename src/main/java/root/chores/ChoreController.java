@@ -1,4 +1,4 @@
-package chores;
+package root.chores;
 
 import org.springframework.web.bind.annotation.*;
 
