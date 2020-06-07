@@ -1,7 +1,10 @@
 package root.chores;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,14 +18,24 @@ public class ChoreController
     }
 
     @GetMapping("/chores")
-    List<Chore> all()
+    List<Chore> all(Authentication authentication)
     {
-        return this.repository.findAll();
+        UserDetails details = (UserDetails) authentication.getPrincipal();
+        var username = details.getUsername();
+        var allChores = this.repository.findAll();
+        List<Chore> choresForUser = new ArrayList<>();
+        for (var chore : allChores)
+            if (chore.getUsername().equals(username))
+                choresForUser.add(chore);
+        return choresForUser;
     }
 
     @PostMapping("/chore")
-    Chore newChore(@RequestBody Chore newChore)
+    Chore newChore(@RequestBody Chore newChore, Authentication authentication)
     {
+        UserDetails details = (UserDetails) authentication.getPrincipal();
+        var username = details.getUsername();
+        newChore.setUsername(username);
         return repository.save(newChore);
     }
 

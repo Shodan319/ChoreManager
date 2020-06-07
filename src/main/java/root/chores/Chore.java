@@ -1,6 +1,7 @@
 package root.chores;
 
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ public class Chore
 {
     private @Id @GeneratedValue Long id;
     private String name;
+    private String username;
     private Integer daysBetween;
     private Integer durationMinutes;
     private LocalDate due;
