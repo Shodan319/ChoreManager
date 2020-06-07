@@ -10,10 +10,13 @@ import java.util.List;
 public class ChoreController
 {
     private final ChoreRepository repository;
+    private final ChoreDomain domain;
 
-    ChoreController(ChoreRepository repository)
+    ChoreController(ChoreRepository repository,
+                    ChoreDomain domain)
     {
         this.repository = repository;
+        this.domain = domain;
     }
 
     @GetMapping("/chores")
@@ -22,7 +25,7 @@ public class ChoreController
         UserDetails details = (UserDetails) authentication.getPrincipal();
         var username = details.getUsername();
         var allChores = this.repository.findAll();
-        return new ChoreDomain().filterByUsername(allChores, username);
+        return domain.filterByUsername(allChores, username);
     }
 
     @PostMapping("/chore")
@@ -49,8 +52,7 @@ public class ChoreController
 
     private Chore updateDueDate(Chore chore)
     {
-        Chore updatedChore = new ChoreDomain().updateDueDate(chore);
+        Chore updatedChore = domain.updateDueDate(chore);
         return repository.save(updatedChore);
-
     }
 }
