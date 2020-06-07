@@ -4,7 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,11 +22,7 @@ public class ChoreController
         UserDetails details = (UserDetails) authentication.getPrincipal();
         var username = details.getUsername();
         var allChores = this.repository.findAll();
-        List<Chore> choresForUser = new ArrayList<>();
-        for (var chore : allChores)
-            if (chore.getUsername().equals(username))
-                choresForUser.add(chore);
-        return choresForUser;
+        return new ChoreDomain().filterByUsername(allChores, username);
     }
 
     @PostMapping("/chore")

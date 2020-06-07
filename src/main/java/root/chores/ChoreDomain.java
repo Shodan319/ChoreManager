@@ -1,6 +1,8 @@
 package root.chores;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChoreDomain
 {
@@ -20,5 +22,14 @@ public class ChoreDomain
 
         }
         return chore;
+    }
+
+    public List<Chore> filterByUsername(List<Chore> chores, String username)
+    {
+        List<Chore> filteredChores = new ArrayList<>();
+        for (var chore : chores)
+            if (chore.getUsername().equals(username))
+                filteredChores.add(chore);
+        return filteredChores;
     }
 }
