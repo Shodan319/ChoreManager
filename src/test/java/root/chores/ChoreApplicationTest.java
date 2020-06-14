@@ -13,11 +13,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ChoreApplicationTest
 {
     private ObjectWriter writer;
@@ -51,7 +53,8 @@ public class ChoreApplicationTest
     public void choresShouldBeEmptyAtStart() throws Exception
     {
         this.mockMvc.perform(get("/chores"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[]")));
     }
 
     @Test
@@ -59,6 +62,7 @@ public class ChoreApplicationTest
     public void showErrorRequestingNotFoundChore() throws Exception
     {
         this.mockMvc.perform(get("/chore/5"))
+                .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("5")));
     }
 
@@ -69,34 +73,44 @@ public class ChoreApplicationTest
     }
 
     @Test
-    @WithMockUser(username = "user", password = "password", roles = "USER")
     public void testCanAddNewChore() throws Exception
     {
         var chore = new Chore("test", 6);
+        addChoreForUser(chore, "user", "password");
+
+        getChoresForUser("user", "password")
+                .andExpect(content().string(containsString("\"name\":\"test\"")));
+    }
+
+    private void addChoreForUser(Chore chore, String username, String password) throws Exception
+    {
         var requestJson = writer.writeValueAsString(chore);
 
         this.mockMvc.perform(post("/chore").contentType(MediaType.APPLICATION_JSON)
-                            .content(requestJson).with(csrf()))
+                            .content(requestJson)
+                .with(httpBasic("user", "password")).with(csrf()))
                 .andExpect(status().isOk());
+    }
 
-        this.mockMvc.perform(get("/chores")).
-                andExpect(content().string(containsString("\"name\":\"test\"")));
+    private ResultActions getChoresForUser(String username, String password) throws Exception
+    {
+        return this.mockMvc.perform(get("/chores")
+                .with(httpBasic(username, password)));
     }
 
     @Test
     public void addingChoreIsSpecificForUser() throws Exception
     {
         var chore = new Chore("test", 6);
-        var requestJson = writer.writeValueAsString(chore);
 
-        this.mockMvc.perform(post("/chore").contentType(MediaType.APPLICATION_JSON)
-                            .content(requestJson).with(httpBasic("user", "password")).with(csrf()))
-                .andExpect(status().isOk());
-        this.mockMvc.perform(get("/chores").with(httpBasic("user", "password")))
+        addChoreForUser(chore, "user", "password");
+
+        getChoresForUser("user", "password")
                 .andExpect(content().string(containsString("test")));
 
-        this.mockMvc.perform(get("/chores").with(httpBasic("user2", "password")))
+        getChoresForUser("user2", "password")
                 .andExpect(status().isOk())
                 .andExpect(content().string(Matchers.not(containsString("test"))));
+
     }
 }
