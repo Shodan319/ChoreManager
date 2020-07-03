@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chore Commander</title>
+</head>
+<body>
+<h1>Due today...</h1>
+<ul th:each="chore: ${choresDue}">
+    <li th:text="${chore.name}"></li>
+</ul>
+</body>
+</html>

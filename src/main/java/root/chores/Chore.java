@@ -1,7 +1,6 @@
 package root.chores;
 
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
