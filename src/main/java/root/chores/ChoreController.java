@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/rest")
 public class ChoreController
 {
     private final ChoreRepository repository;
@@ -19,7 +20,7 @@ public class ChoreController
         this.domain = domain;
     }
 
-    @GetMapping("/chores")
+    @GetMapping("chores")
     List<Chore> all(Authentication authentication)
     {
         UserDetails details = (UserDetails) authentication.getPrincipal();
@@ -28,7 +29,7 @@ public class ChoreController
         return domain.filterByUsername(allChores, username);
     }
 
-    @PostMapping("/chore")
+    @PostMapping("chore")
     Chore newChore(@RequestBody Chore newChore, Authentication authentication)
     {
         UserDetails details = (UserDetails) authentication.getPrincipal();
@@ -37,13 +38,13 @@ public class ChoreController
         return repository.save(newChore);
     }
 
-    @GetMapping("/chore/{id}")
+    @GetMapping("chore/{id}")
     Chore getChore(@PathVariable Long id) throws ChoreNotFoundException
     {
         return this.repository.findById(id).orElseThrow(() -> new ChoreNotFoundException(id.toString()));
     }
 
-    @PutMapping("/chore/{id}")
+    @PutMapping("chore/{id}")
     Chore rescheduleChore(@PathVariable Long id)
     {
         return this.repository.findById(id).

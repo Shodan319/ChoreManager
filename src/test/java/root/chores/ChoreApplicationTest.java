@@ -1,6 +1,5 @@
 package root.chores;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -52,7 +51,7 @@ public class ChoreApplicationTest
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void choresShouldBeEmptyAtStart() throws Exception
     {
-        this.mockMvc.perform(get("/chores"))
+        this.mockMvc.perform(get("/rest/chores"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[]")));
     }
@@ -61,7 +60,7 @@ public class ChoreApplicationTest
     @WithMockUser(username = "user", password = "password", roles = "USER")
     public void showErrorRequestingNotFoundChore() throws Exception
     {
-        this.mockMvc.perform(get("/chore/5"))
+        this.mockMvc.perform(get("/rest/chore/5"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("5")));
     }
@@ -86,7 +85,7 @@ public class ChoreApplicationTest
     {
         var requestJson = writer.writeValueAsString(chore);
 
-        this.mockMvc.perform(post("/chore").contentType(MediaType.APPLICATION_JSON)
+        this.mockMvc.perform(post("/rest/chore").contentType(MediaType.APPLICATION_JSON)
                             .content(requestJson)
                 .with(httpBasic("user", "password")).with(csrf()))
                 .andExpect(status().isOk());
@@ -94,7 +93,7 @@ public class ChoreApplicationTest
 
     private ResultActions getChoresForUser(String username, String password) throws Exception
     {
-        return this.mockMvc.perform(get("/chores")
+        return this.mockMvc.perform(get("/rest/chores")
                 .with(httpBasic(username, password)));
     }
 
