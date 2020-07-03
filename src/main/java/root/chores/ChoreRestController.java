@@ -8,13 +8,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rest")
-public class ChoreController
+public class ChoreRestController
 {
     private final ChoreRepository repository;
     private final ChoreDomain domain;
 
-    ChoreController(ChoreRepository repository,
-                    ChoreDomain domain)
+    ChoreRestController(ChoreRepository repository,
+                        ChoreDomain domain)
     {
         this.repository = repository;
         this.domain = domain;
