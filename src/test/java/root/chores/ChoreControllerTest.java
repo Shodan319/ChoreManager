@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -36,9 +38,8 @@ public class ChoreControllerTest
         var chores = new ArrayList<Chore>();
         chores.add(new Chore("due today", 7));
         chores.add(new Chore("due yesterday", 5, 15, LocalDate.now().minusDays(1)));
-        chores.add(new Chore("due tomorrow", 5, 15, LocalDate.now().plusDays(1)));
 
-        when(choreRepository.findAll())
+        when(choreRepository.findByDueBefore(any()))
                 .thenReturn(chores);
     }
 
