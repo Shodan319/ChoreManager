@@ -6,8 +6,21 @@
 </head>
 <body>
 <h1>Due today...</h1>
-<ul th:each="chore: ${choresDue}">
-    <li th:text="${chore.name}"></li>
-</ul>
+<form method="post" th:action="@{/chore}" th:object="${chore}">
+    <ul>
+        <li th:each="chore: ${choresDue}">
+            <input type="checkbox" name="choreIds" th:value="${chore.id}"/>
+            <label th:text="${chore.name}"></label>
+        </li>
+    </ul>
+    <input type="submit" value="Mark Chores Complete">
+</form>
+
+<form method="post" action="#" th:action="@{/chores}" th:object="${chore}">
+    <input type="text" th:field="*{name}">
+    <input type="text" th:field="*{daysBetween}">
+    <input type="submit" value="Add chore">
+</form>
+
 </body>
 </html>

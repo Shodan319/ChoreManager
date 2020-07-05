@@ -1,6 +1,9 @@
 package root.chores;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,8 @@ import java.time.LocalDate;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Chore
 {
     private @Id @GeneratedValue Long id;
@@ -16,11 +21,9 @@ public class Chore
     private String username;
     private Integer daysBetween;
     private Integer durationMinutes;
-    private LocalDate due;
 
-    public Chore()
-    {
-    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate due;
 
     public Chore(String name, Integer daysBetween)
     {
