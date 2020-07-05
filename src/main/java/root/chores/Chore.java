@@ -8,6 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -17,10 +20,15 @@ import java.time.LocalDate;
 public class Chore
 {
     private @Id @GeneratedValue Long id;
+
+    @NotBlank(message="Chore name is required")
     private String name;
-    private String username;
+
+    @NotNull
     private Integer daysBetween;
+
     private Integer durationMinutes;
+    private String username;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate due;

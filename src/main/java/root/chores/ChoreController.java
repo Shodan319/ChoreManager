@@ -3,12 +3,13 @@ package root.chores;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping
@@ -21,8 +22,8 @@ public class ChoreController
     public String getDueChores(Model model)
     {
         var tomorrow = LocalDate.now().plusDays(1);
-        //var chores = choreRepository.findByDueBefore(tomorrow);
-        var chores = choreRepository.findAll();
+        var chores = choreRepository.findByDueBefore(tomorrow);
+        //var chores = choreRepository.findAll();
         model.addAttribute("choresDue", chores);
         model.addAttribute("chore", new Chore());
         model.addAttribute("chores", new ArrayList<Chore>());
@@ -30,8 +31,11 @@ public class ChoreController
     }
 
     @PostMapping("/chores")
-    public String addNewChore(@ModelAttribute Chore chore) throws IOException
+    public String addNewChore(@ModelAttribute @Valid Chore chore, Errors errors) throws IOException
     {
+        if (errors.hasErrors())
+            return "chores";
+
         chore.setDue(LocalDate.now().plusDays(chore.getDaysBetween()));
         choreRepository.save(chore);
         return "redirect:/chores";

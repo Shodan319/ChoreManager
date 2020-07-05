@@ -17,8 +17,17 @@
 </form>
 
 <form method="post" action="#" th:action="@{/chores}" th:object="${chore}">
-    <input type="text" th:field="*{name}">
-    <input type="text" th:field="*{daysBetween}">
+    <input type="text" th:field="*{name}" placeholder="Chore name">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('name')}"
+          th:errors="*{name}">Chore name is invalid</span>
+    <br>
+
+    <input type="text" th:field="*{daysBetween}" placeholder="Do chore every # days">
+    <span class="validationError"
+          th:if="${#fields.hasErrors('daysBetween')}"
+          th:errors="*{daysBetween}">Chore name is invalid</span>
+    <br>
     <input type="submit" value="Add chore">
 </form>
 
