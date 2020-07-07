@@ -31,5 +31,13 @@
     <input type="submit" value="Add chore">
 </form>
 
+<hr>
+<h1>All Chores</h1>
+<ul>
+    <li th:each="chore: ${allChores}">
+        <span th:text="${chore.name} + ' every ' + ${chore.daysBetween} + ' days'"></span>
+    </li>
+</ul>
+
 </body>
 </html>

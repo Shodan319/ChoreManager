@@ -23,10 +23,10 @@ public class ChoreController
     {
         var tomorrow = LocalDate.now().plusDays(1);
         var chores = choreRepository.findByDueBefore(tomorrow);
-        //var chores = choreRepository.findAll();
         model.addAttribute("choresDue", chores);
         model.addAttribute("chore", new Chore());
         model.addAttribute("chores", new ArrayList<Chore>());
+        model.addAttribute("allChores", choreRepository.findAll());
         return "chores";
     }
 
