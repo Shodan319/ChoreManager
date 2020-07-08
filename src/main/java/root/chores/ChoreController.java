@@ -34,7 +34,7 @@ public class ChoreController
     public String addNewChore(@ModelAttribute @Valid Chore chore, Errors errors) throws IOException
     {
         if (errors.hasErrors())
-            return "chores";
+            return "redirect:/chores";
 
         chore.setDue(LocalDate.now().plusDays(chore.getDaysBetween()));
         choreRepository.save(chore);
@@ -50,6 +50,14 @@ public class ChoreController
             chore.setDue(LocalDate.now().plusDays(chore.getDaysBetween()));
             this.choreRepository.save(chore);
         }
+        return "redirect:/chores";
+    }
+
+    @PostMapping("/deleteChore")
+    public String deleteChore(@RequestParam Long[] choreIds)
+    {
+        for (Long id : choreIds)
+            this.choreRepository.deleteById(id);
         return "redirect:/chores";
     }
 }

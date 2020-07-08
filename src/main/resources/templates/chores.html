@@ -33,11 +33,15 @@
 
 <hr>
 <h1>All Chores</h1>
+<form th:method="delete" th:action="@{/deleteChore}" th:object="${chore}">
 <ul>
     <li th:each="chore: ${allChores}">
-        <span th:text="${chore.name} + ' every ' + ${chore.daysBetween} + ' days'"></span>
+        <input type="checkbox" name="choreIds" th:value="${chore.id}"/>
+        <label th:text="${chore.name} + ' every ' + ${chore.daysBetween} + ' days'"></label>
     </li>
 </ul>
+    <input type="submit" value="Delete selected chores">
+</form>
 
 </body>
 </html>
