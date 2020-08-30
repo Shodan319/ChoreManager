@@ -6,9 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import javax.validation.Valid;
 
 @Controller
@@ -21,23 +19,28 @@ public class ChoreController
     @GetMapping("/chores")
     public String getDueChores(Model model)
     {
-        var tomorrow = LocalDate.now().plusDays(1);
-        var chores = choreRepository.findByDueBefore(tomorrow);
-        model.addAttribute("choresDue", chores);
+        addChoresToModel(model);
         model.addAttribute("chore", new Chore());
-        model.addAttribute("chores", new ArrayList<Chore>());
-        model.addAttribute("allChores", choreRepository.findAll());
         return "chores";
     }
 
     @PostMapping("/chores")
-    public String addNewChore(@ModelAttribute @Valid Chore chore, Errors errors) throws IOException
+    public String addNewChore(@ModelAttribute @Valid Chore chore,
+                              Errors errors,
+                              Model model)
     {
         if (errors.hasErrors())
-            return "redirect:/chores";
+        {
+            model.addAttribute("error", errors);
+            addChoresToModel(model);
+            return "chores";
+        }
+        else
+        {
+            chore.setDue(LocalDate.now().plusDays(chore.getDaysBetween()));
+            choreRepository.save(chore);
+        }
 
-        chore.setDue(LocalDate.now().plusDays(chore.getDaysBetween()));
-        choreRepository.save(chore);
         return "redirect:/chores";
     }
 
@@ -59,5 +62,13 @@ public class ChoreController
         for (Long id : choreIds)
             this.choreRepository.deleteById(id);
         return "redirect:/chores";
+    }
+
+    private void addChoresToModel(Model model)
+    {
+        var tomorrow = LocalDate.now().plusDays(1);
+        var chores = choreRepository.findByDueBefore(tomorrow);
+        model.addAttribute("choresDue", chores);
+        model.addAttribute("allChores", choreRepository.findAll());
     }
 }
